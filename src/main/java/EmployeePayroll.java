@@ -1,7 +1,9 @@
+import java.util.Objects;
+
 public class EmployeePayroll {
-    int id;
-    String name;
-    double salary;
+    private int id;
+    private String name;
+    private double salary;
 
     public EmployeePayroll(int id, String name, double salary) {
         this.id = id;
@@ -31,6 +33,20 @@ public class EmployeePayroll {
 
     public void setSalary(double salary) {
         this.salary = salary;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmployeePayroll that = (EmployeePayroll) o;
+        return id == that.id && Double.compare(that.salary, salary) == 0 && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, salary);
     }
 
     @Override

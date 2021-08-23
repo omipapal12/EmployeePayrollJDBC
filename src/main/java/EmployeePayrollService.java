@@ -1,25 +1,52 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 public class EmployeePayrollService {
-    List<EmployeePayroll> employeePayrolls;
+    private List<EmployeePayroll> employeePayrolls;
 
-    public List<EmployeePayroll> readEmployeePayrollData() {
-        return new EmployeePayrollServiceDB().readData();
+    private EmployeePayrollServiceDB singletonEmployeePayrollServiceDB;
+
+    public void updateSalaryByName(String name, double salary) {
+        int result = singletonEmployeePayrollServiceDB.updateSalaryByName(name, salary);
+        if(result == 0)
+            return;
+
+        EmployeePayroll employeePayroll = getEmployeePayrollByName(name);
+        if(Objects.nonNull(employeePayroll))
+            employeePayroll.setSalary(salary);
     }
 
-    public enum IOService {
-        FILE_IO,DB_IO,CONSOLE_IO,REST_IO
+    public boolean checkEmployeeDataSyncByName(String name) {
+        List<EmployeePayroll> employeePayrollList = singletonEmployeePayrollServiceDB.getEmployeePayRollByName(name);
+        return employeePayrollList.get(0).equals(getEmployeePayrollByName(name));
     }
 
     public EmployeePayrollService () {
+        singletonEmployeePayrollServiceDB = EmployeePayrollServiceDB.getInstance();
+    }
 
+    public List<EmployeePayroll> readEmployeePayrollData() {
+        this.employeePayrolls = singletonEmployeePayrollServiceDB.readData();
+        return this.employeePayrolls;
+    }
+
+    private EmployeePayroll getEmployeePayrollByName(String name) {
+        return employeePayrolls.stream().filter(item -> item.getName().equals(name)).findFirst().orElse(null);
     }
 
     public EmployeePayrollService(List<EmployeePayroll> employeePayrolls) {
         this.employeePayrolls =employeePayrolls;
     }
 
+
+
+//============================================================================================================
+
+
+    public enum IOService {
+        FILE_IO,DB_IO,CONSOLE_IO,REST_IO
+    }
     public static void main(String[] args) {
 
         List<EmployeePayroll> employeePayrolls = new ArrayList<>();

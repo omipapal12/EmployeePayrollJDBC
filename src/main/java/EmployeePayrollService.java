@@ -39,6 +39,12 @@ public class EmployeePayrollService {
         this.employeePayrolls =employeePayrolls;
     }
 
+    public void addNewEmployee(EmployeePayroll employeePayroll) {
+        singletonEmployeePayrollServiceDB.addNewEmployee(employeePayroll);
+        if(employeePayroll.getId() > 0) {
+            employeePayrolls.add(employeePayroll);
+        }
+    }
 
 
 //============================================================================================================
